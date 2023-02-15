@@ -20,7 +20,7 @@ public class BootstrapClient
         self.connection = connection
     }
 
-    public func getAddresses(serverID: String) throws -> [DiscoveryServerInfo]
+    public func getAddresses(serverID: String) throws -> [WreathServerInfo]
     {
         let message = BootstrapRequest.getAddresses(Getaddresses(serverID: serverID))
         let encoder = JSONEncoder()
@@ -46,7 +46,7 @@ public class BootstrapClient
         }
     }
 
-    public func registerNewAddress(newServer: DiscoveryServerInfo) throws
+    public func registerNewAddress(newServer: WreathServerInfo) throws
     {
         let message = BootstrapRequest.registerNewAddress(Registernewaddress(newServer: newServer))
         let encoder = JSONEncoder()

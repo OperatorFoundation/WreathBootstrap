@@ -22,7 +22,7 @@ final class BootstrapTests: XCTestCase {
         
         let configURL = File.homeDirectory().appendingPathComponent("Bootstrap-client.json")
         let client = try BootstrapClient(configURL: configURL)
-        let serverInfo = DiscoveryServerInfo(serverID: "thisisnotarealid", serverAddress: "127.0.0.1:1234")
+        let serverInfo = WreathServerInfo(serverID: "thisisnotarealid", serverAddress: "127.0.0.1:1234")
         try client.registerNewAddress(newServer: serverInfo)
         try client.sendHeartbeat(serverID: "thisisnotarealid")
     }
@@ -30,7 +30,7 @@ final class BootstrapTests: XCTestCase {
     func testBootstrapClient() throws {
         let configURL = File.homeDirectory().appendingPathComponent("Bootstrap-client.json")
         let client = try BootstrapClient(configURL: configURL)
-        let serverInfo = DiscoveryServerInfo(serverID: "thisisnotarealid", serverAddress: "127.0.0.1:1234")
+        let serverInfo = WreathServerInfo(serverID: "thisisnotarealid", serverAddress: "127.0.0.1:1234")
         try client.registerNewAddress(newServer: serverInfo)
         try client.sendHeartbeat(serverID: "thisisnotarealid")
     }

@@ -4,18 +4,18 @@ import Arcadia
 public class Bootstrap
 {
     public let arcadia = Arcadia()
-    // the array of valid Bootstrap servers
-    public var availableServers: [String: DiscoveryServerInfo] = [:]
+    // an array of valid Bootstrap servers
+    public var availableServers: [String: WreathServerInfo] = [:]
     
     public init() {}
     
-    // sends a request for a list of servers
-    public func getAddresses(serverID: String) -> [DiscoveryServerInfo] {
-        return arcadia.findPeers(discoveryServers: [DiscoveryServerInfo](availableServers.values), serverID: serverID)
+    /// Sends a request for a list of WreathServers
+    public func getAddresses(serverID: String) -> [WreathServerInfo] {
+        return arcadia.findPeers(wreathServers: [WreathServerInfo](availableServers.values), serverID: serverID)
     }
     
-    // adds a new server to the verified server list
-    public func registerNewAddress(newServer: DiscoveryServerInfo) throws {
+    /// Adds a new WreathServer to the verified server list
+    public func registerNewAddress(newServer: WreathServerInfo) throws {
         if self.availableServers[newServer.serverID] != nil {
             throw BootstrapError.serverIDAlreadyExists
         } else {
@@ -23,9 +23,7 @@ public class Bootstrap
         }
     }
     
-    // the Bootstrap server should have a heartbeat function
-    // and a property that has the last date that a check took place
-    // checkHeartbeat should update this property
+    /// A heartbeat function that updates the last date that a check in took place (keep alive)
     public func sendHeartbeat(serverID: String) throws {
         if let server = self.availableServers[serverID] {
             server.lastHeartbeat = Date()

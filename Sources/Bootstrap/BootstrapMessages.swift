@@ -25,9 +25,9 @@ public struct Getaddresses: Codable
 
 public struct Registernewaddress: Codable
 {
-    public let newServer: DiscoveryServerInfo
+    public let newServer: WreathServerInfo
 
-    public init(newServer: DiscoveryServerInfo)
+    public init(newServer: WreathServerInfo)
     {
         self.newServer = newServer
     }
@@ -45,7 +45,7 @@ public struct Sendheartbeat: Codable
 
 public enum BootstrapResponse: Codable
 {
-    case getAddresses([DiscoveryServerInfo])
+    case getAddresses([WreathServerInfo])
     case registerNewAddress
     case sendHeartbeat
 }
