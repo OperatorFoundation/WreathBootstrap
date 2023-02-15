@@ -1,4 +1,4 @@
 # Bootstrap
 
-Part of the Bootstrap Service
+Part of the Discovery Service
  
