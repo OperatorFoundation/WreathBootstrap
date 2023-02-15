@@ -1,12 +1,12 @@
 //
-//  DiscoveryBootstrapMessages.swift
+//  BootstrapMessages.swift
 //
 //
 //  Created by Clockwork on Feb 6, 2023.
 //
 import Arcadia
 
-public enum DiscoveryBootstrapRequest: Codable
+public enum BootstrapRequest: Codable
 {
     case getAddresses(Getaddresses)
     case registerNewAddress(Registernewaddress)
@@ -43,7 +43,7 @@ public struct Sendheartbeat: Codable
     }
 }
 
-public enum DiscoveryBootstrapResponse: Codable
+public enum BootstrapResponse: Codable
 {
     case getAddresses([DiscoveryServerInfo])
     case registerNewAddress

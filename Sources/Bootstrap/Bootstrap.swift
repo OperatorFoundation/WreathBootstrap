@@ -1,10 +1,10 @@
 import Foundation
 import Arcadia
 
-public class DiscoveryBootstrap
+public class Bootstrap
 {
     public let arcadia = Arcadia()
-    // the array of valid discovery servers
+    // the array of valid Bootstrap servers
     public var availableServers: [String: DiscoveryServerInfo] = [:]
     
     public init() {}
@@ -17,25 +17,25 @@ public class DiscoveryBootstrap
     // adds a new server to the verified server list
     public func registerNewAddress(newServer: DiscoveryServerInfo) throws {
         if self.availableServers[newServer.serverID] != nil {
-            throw DiscoveryBootstrapError.serverIDAlreadyExists
+            throw BootstrapError.serverIDAlreadyExists
         } else {
             self.availableServers[newServer.serverID] = newServer
         }
     }
     
-    // the discovery server should have a heartbeat function
+    // the Bootstrap server should have a heartbeat function
     // and a property that has the last date that a check took place
     // checkHeartbeat should update this property
     public func sendHeartbeat(serverID: String) throws {
         if let server = self.availableServers[serverID] {
             server.lastHeartbeat = Date()
         } else {
-            throw DiscoveryBootstrapError.invalidServerID
+            throw BootstrapError.invalidServerID
         }
     }
 }
 
-public enum DiscoveryBootstrapError: Error {
+public enum BootstrapError: Error {
     case serverIDAlreadyExists
     case invalidServerID
 }

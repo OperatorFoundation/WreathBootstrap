@@ -1,5 +1,5 @@
 //
-//  DiscoveryBootstrapServer.swift
+//  BootstrapServer.swift
 //
 //
 //  Created by Clockwork on Feb 6, 2023.
@@ -8,16 +8,16 @@
 import Foundation
 
 import TransmissionTypes
-import DiscoveryBootstrap
+import Bootstrap
 
-public class DiscoveryBootstrapServer
+public class BootstrapServer
 {
     let listener: TransmissionTypes.Listener
-    let handler: DiscoveryBootstrap
+    let handler: Bootstrap
 
     var running: Bool = true
 
-    public init(listener: TransmissionTypes.Listener, handler: DiscoveryBootstrap)
+    public init(listener: TransmissionTypes.Listener, handler: Bootstrap)
     {
         self.listener = listener
         self.handler = handler
@@ -63,39 +63,39 @@ public class DiscoveryBootstrapServer
             {
                 guard let requestData = connection.readWithLengthPrefix(prefixSizeInBits: 64) else
                 {
-                    throw DiscoveryBootstrapServerError.readFailed
+                    throw BootstrapServerError.readFailed
                 }
 
                 let decoder = JSONDecoder()
-                let request = try decoder.decode(DiscoveryBootstrapRequest.self, from: requestData)
+                let request = try decoder.decode(BootstrapRequest.self, from: requestData)
                 switch request
                 {
                     case .getAddresses(let value):
                         let result = self.handler.getAddresses(serverID: value.serverID)
-                        let response = DiscoveryBootstrapResponse.getAddresses(result)
+                        let response = BootstrapResponse.getAddresses(result)
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
-                            throw DiscoveryBootstrapServerError.writeFailed
+                            throw BootstrapServerError.writeFailed
                         }
                     case .registerNewAddress(let value):
                         try self.handler.registerNewAddress(newServer: value.newServer)
-                        let response = DiscoveryBootstrapResponse.registerNewAddress
+                        let response = BootstrapResponse.registerNewAddress
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
-                            throw DiscoveryBootstrapServerError.writeFailed
+                            throw BootstrapServerError.writeFailed
                         }
                     case .sendHeartbeat(let value):
                         try self.handler.sendHeartbeat(serverID: value.serverID)
-                        let response = DiscoveryBootstrapResponse.sendHeartbeat
+                        let response = BootstrapResponse.sendHeartbeat
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
-                            throw DiscoveryBootstrapServerError.writeFailed
+                            throw BootstrapServerError.writeFailed
                         }
                 }
             }
@@ -108,7 +108,7 @@ public class DiscoveryBootstrapServer
     }
 }
 
-public enum DiscoveryBootstrapServerError: Error
+public enum BootstrapServerError: Error
 {
     case connectionRefused(String, Int)
     case writeFailed

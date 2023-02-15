@@ -9,7 +9,7 @@ import Antiphony
 import Foundation
 import Transmission
 
-extension DiscoveryBootstrapClient {
+extension BootstrapClient {
     public convenience init(configURL: URL) throws
     {
         guard let config = ClientConfig(url: configURL) else {

@@ -1,5 +1,5 @@
 //
-//  DiscoveryBootstrapClient.swift
+//  BootstrapClient.swift
 //
 //
 //  Created by Clockwork on Feb 6, 2023.
@@ -9,9 +9,9 @@ import Foundation
 
 import Arcadia
 import TransmissionTypes
-import DiscoveryBootstrap
+import Bootstrap
 
-public class DiscoveryBootstrapClient
+public class BootstrapClient
 {
     let connection: TransmissionTypes.Connection
 
@@ -22,84 +22,84 @@ public class DiscoveryBootstrapClient
 
     public func getAddresses(serverID: String) throws -> [DiscoveryServerInfo]
     {
-        let message = DiscoveryBootstrapRequest.getAddresses(Getaddresses(serverID: serverID))
+        let message = BootstrapRequest.getAddresses(Getaddresses(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
-            throw DiscoveryBootstrapClientError.writeFailed
+            throw BootstrapClientError.writeFailed
         }
 
         guard let responseData = self.connection.readWithLengthPrefix(prefixSizeInBits: 64) else
         {
-            throw DiscoveryBootstrapClientError.readFailed
+            throw BootstrapClientError.readFailed
         }
 
         let decoder = JSONDecoder()
-        let response = try decoder.decode(DiscoveryBootstrapResponse.self, from: responseData)
+        let response = try decoder.decode(BootstrapResponse.self, from: responseData)
         switch response
         {
             case .getAddresses(let value):
                 return value
             default:
-                throw DiscoveryBootstrapClientError.badReturnType
+                throw BootstrapClientError.badReturnType
         }
     }
 
     public func registerNewAddress(newServer: DiscoveryServerInfo) throws
     {
-        let message = DiscoveryBootstrapRequest.registerNewAddress(Registernewaddress(newServer: newServer))
+        let message = BootstrapRequest.registerNewAddress(Registernewaddress(newServer: newServer))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
-            throw DiscoveryBootstrapClientError.writeFailed
+            throw BootstrapClientError.writeFailed
         }
 
         guard let responseData = self.connection.readWithLengthPrefix(prefixSizeInBits: 64) else
         {
-            throw DiscoveryBootstrapClientError.readFailed
+            throw BootstrapClientError.readFailed
         }
 
         let decoder = JSONDecoder()
-        let response = try decoder.decode(DiscoveryBootstrapResponse.self, from: responseData)
+        let response = try decoder.decode(BootstrapResponse.self, from: responseData)
         switch response
         {
             case .registerNewAddress:
                 return
             default:
-                throw DiscoveryBootstrapClientError.badReturnType
+                throw BootstrapClientError.badReturnType
         }
     }
 
     public func sendHeartbeat(serverID: String) throws
     {
-        let message = DiscoveryBootstrapRequest.sendHeartbeat(Sendheartbeat(serverID: serverID))
+        let message = BootstrapRequest.sendHeartbeat(Sendheartbeat(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
-            throw DiscoveryBootstrapClientError.writeFailed
+            throw BootstrapClientError.writeFailed
         }
 
         guard let responseData = self.connection.readWithLengthPrefix(prefixSizeInBits: 64) else
         {
-            throw DiscoveryBootstrapClientError.readFailed
+            throw BootstrapClientError.readFailed
         }
 
         let decoder = JSONDecoder()
-        let response = try decoder.decode(DiscoveryBootstrapResponse.self, from: responseData)
+        let response = try decoder.decode(BootstrapResponse.self, from: responseData)
         switch response
         {
             case .sendHeartbeat:
                 return
             default:
-                throw DiscoveryBootstrapClientError.badReturnType
+                throw BootstrapClientError.badReturnType
         }
     }
 }
 
-public enum DiscoveryBootstrapClientError: Error
+public enum BootstrapClientError: Error
 {
     case connectionRefused(String, Int)
     case writeFailed

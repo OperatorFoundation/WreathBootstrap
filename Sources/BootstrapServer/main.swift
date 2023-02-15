@@ -1,6 +1,6 @@
 //
 //  main.swift
-//  Discovery
+//  Bootstrap
 //
 //  Created by Joshua on 02/06/2023
 //
@@ -16,25 +16,25 @@ import Logging
 #endif
 
 import Antiphony
-import DiscoveryBootstrap
+import Bootstrap
 import Gardener
 import Net
 import Spacetime
 
 
-struct DiscoveryCommandLine: ParsableCommand
+struct BootstrapCommandLine: ParsableCommand
 {
     static let configuration = CommandConfiguration(
-        commandName: "discovery",
+        commandName: "Bootstrap",
         subcommands: [New.self, Run.self]
     )
     
-    static let clientConfigURL =  File.homeDirectory().appendingPathComponent("discovery-client.json")
-    static let serverConfigURL = URL(fileURLWithPath: File.homeDirectory().path).appendingPathComponent("discovery-server.json")
-    static let loggerLabel = "org.OperatorFoundation.DiscoveryLogger"
+    static let clientConfigURL =  File.homeDirectory().appendingPathComponent("Bootstrap-client.json")
+    static let serverConfigURL = URL(fileURLWithPath: File.homeDirectory().path).appendingPathComponent("Bootstrap-server.json")
+    static let loggerLabel = "org.OperatorFoundation.BootstrapLogger"
 }
 
-extension DiscoveryCommandLine
+extension BootstrapCommandLine
 {
     struct New: ParsableCommand
     {
@@ -46,33 +46,33 @@ extension DiscoveryCommandLine
         
         mutating public func run() throws
         {
-            let keychainDirectoryURL = File.homeDirectory().appendingPathComponent(".discovery-server")
-            let keychainLabel = "Discovery.KeyAgreement"
+            let keychainDirectoryURL = File.homeDirectory().appendingPathComponent(".Bootstrap-server")
+            let keychainLabel = "Bootstrap.KeyAgreement"
             
             try Antiphony.generateNew(name: name, port: port, serverConfigURL: serverConfigURL, clientConfigURL: clientConfigURL, keychainURL: keychainDirectoryURL, keychainLabel: keychainLabel)
         }
     }
 }
 
-extension DiscoveryCommandLine
+extension BootstrapCommandLine
 {
     struct Run: ParsableCommand
     {
         mutating func run() throws
         {
-            let customDiscovery = try Antiphony(serverConfigURL: serverConfigURL, loggerLabel: loggerLabel, capabilities: Capabilities(.display, .networkListen))
+            let customBootstrap = try Antiphony(serverConfigURL: serverConfigURL, loggerLabel: loggerLabel, capabilities: Capabilities(.display, .networkListen))
             
-            guard let newListener = customDiscovery.listener else
+            guard let newListener = customBootstrap.listener else
             {
                 throw AntiphonyError.failedToCreateListener
             }
             
-            let discoveryLogic = DiscoveryBootstrap()
-            let demoServer = DiscoveryBootstrapServer(listener: newListener, handler: discoveryLogic)
+            let BootstrapLogic = Bootstrap()
+            let demoServer = BootstrapServer(listener: newListener, handler: BootstrapLogic)
             
-            customDiscovery.wait()
+            customBootstrap.wait()
         }
     }
 }
 
-DiscoveryCommandLine.main()
+BootstrapCommandLine.main()
