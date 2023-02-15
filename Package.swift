@@ -6,19 +6,12 @@ import PackageDescription
 let package = Package(
     name: "Bootstrap",
     platforms: [
-        .macOS(.v13),
-        .iOS(.v15)
+        .macOS(.v13)
     ],
     products: [
         .library(
-            name: "Bootstrap",
-            targets: ["Bootstrap"]),
-        .library(
             name: "BootstrapClient",
             targets: ["BootstrapClient"]),
-        .executable(
-            name: "BootstrapServer",
-            targets: ["BootstrapServer"]),
     ],
     dependencies: [
         .package(url: "https://github.com/OperatorFoundation/Arcadia", branch: "main"),
