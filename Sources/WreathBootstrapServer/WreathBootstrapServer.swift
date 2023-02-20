@@ -8,16 +8,16 @@
 import Foundation
 
 import TransmissionTypes
-import Bootstrap
+import WreathBootstrap
 
 public class WreathBootstrapServer
 {
     let listener: TransmissionTypes.Listener
-    let handler: Bootstrap
+    let handler: WreathBootstrap
 
     var running: Bool = true
 
-    public init(listener: TransmissionTypes.Listener, handler: Bootstrap)
+    public init(listener: TransmissionTypes.Listener, handler: WreathBootstrap)
     {
         self.listener = listener
         self.handler = handler
@@ -67,12 +67,12 @@ public class WreathBootstrapServer
                 }
 
                 let decoder = JSONDecoder()
-                let request = try decoder.decode(BootstrapRequest.self, from: requestData)
+                let request = try decoder.decode(WreathBootstrapRequest.self, from: requestData)
                 switch request
                 {
                     case .getAddresses(let value):
                         let result = self.handler.getAddresses(serverID: value.serverID)
-                        let response = BootstrapResponse.getAddresses(result)
+                        let response = WreathBootstrapResponse.getAddresses(result)
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
@@ -81,7 +81,7 @@ public class WreathBootstrapServer
                         }
                     case .registerNewAddress(let value):
                         try self.handler.registerNewAddress(newServer: value.newServer)
-                        let response = BootstrapResponse.registerNewAddress
+                        let response = WreathBootstrapResponse.registerNewAddress
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
@@ -90,7 +90,7 @@ public class WreathBootstrapServer
                         }
                     case .sendHeartbeat(let value):
                         try self.handler.sendHeartbeat(serverID: value.serverID)
-                        let response = BootstrapResponse.sendHeartbeat
+                        let response = WreathBootstrapResponse.sendHeartbeat
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else

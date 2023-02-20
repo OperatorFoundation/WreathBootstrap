@@ -16,7 +16,7 @@ import Logging
 #endif
 
 import Antiphony
-import Bootstrap
+import WreathBootstrap
 import Gardener
 import Net
 import Spacetime
@@ -67,7 +67,7 @@ extension WreathBootstrapCommandLine
                 throw AntiphonyError.failedToCreateListener
             }
             
-            let BootstrapLogic = Bootstrap()
+            let BootstrapLogic = WreathBootstrap()
             let demoServer = WreathBootstrapServer(listener: newListener, handler: BootstrapLogic)
             
             customBootstrap.wait()

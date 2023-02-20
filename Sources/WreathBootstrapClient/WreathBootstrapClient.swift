@@ -9,7 +9,7 @@ import Foundation
 
 import Arcadia
 import TransmissionTypes
-import Bootstrap
+import WreathBootstrap
 
 public class WreathBootstrapClient
 {
@@ -22,7 +22,7 @@ public class WreathBootstrapClient
 
     public func getAddresses(serverID: String) throws -> [WreathServerInfo]
     {
-        let message = BootstrapRequest.getAddresses(Getaddresses(serverID: serverID))
+        let message = WreathBootstrapRequest.getAddresses(Getaddresses(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
@@ -36,7 +36,7 @@ public class WreathBootstrapClient
         }
 
         let decoder = JSONDecoder()
-        let response = try decoder.decode(BootstrapResponse.self, from: responseData)
+        let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
         switch response
         {
             case .getAddresses(let value):
@@ -48,7 +48,7 @@ public class WreathBootstrapClient
 
     public func registerNewAddress(newServer: WreathServerInfo) throws
     {
-        let message = BootstrapRequest.registerNewAddress(Registernewaddress(newServer: newServer))
+        let message = WreathBootstrapRequest.registerNewAddress(Registernewaddress(newServer: newServer))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
@@ -62,7 +62,7 @@ public class WreathBootstrapClient
         }
 
         let decoder = JSONDecoder()
-        let response = try decoder.decode(BootstrapResponse.self, from: responseData)
+        let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
         switch response
         {
             case .registerNewAddress:
@@ -74,7 +74,7 @@ public class WreathBootstrapClient
 
     public func sendHeartbeat(serverID: String) throws
     {
-        let message = BootstrapRequest.sendHeartbeat(Sendheartbeat(serverID: serverID))
+        let message = WreathBootstrapRequest.sendHeartbeat(Sendheartbeat(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
@@ -88,7 +88,7 @@ public class WreathBootstrapClient
         }
 
         let decoder = JSONDecoder()
-        let response = try decoder.decode(BootstrapResponse.self, from: responseData)
+        let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
         switch response
         {
             case .sendHeartbeat:
