@@ -40,57 +40,54 @@ final class WreathBootstrapTests: XCTestCase {
         let client = try WreathBootstrapClient(configURL: configURL)
         let serverInfo = WreathServerInfo(serverID: "thisisnotarealid", serverAddress: "127.0.0.1:1234")
         try client.registerNewAddress(newServer: serverInfo)
-        
         var index = 0
-        
-        while index <= 10 {
-            let secondsToDelay = 5.0
-            DispatchQueue.main.asyncAfter(deadline: .now() + secondsToDelay) {
-               print("This message is delayed")
-               index += 1
+        let lock = DispatchSemaphore(value: 0)
+        scheduleHeartbeat(index: index, lock: lock, client: client)
+        lock.wait()
+    }
+    
+    func scheduleHeartbeat(index: Int, lock: DispatchSemaphore, client: WreathBootstrapClient) {
+        let secondsToDelay = 60.0
+        DispatchQueue.main.asyncAfter(deadline: .now() + secondsToDelay) {
+            try? client.sendHeartbeat(serverID: "thisisnotarealid")
+            print("Heartbeat called")
+            if index < 10 {
+                self.scheduleHeartbeat(index: index + 1, lock: lock, client: client)
+            } else {
+                lock.signal()
             }
-            
-            try client.sendHeartbeat(serverID: "thisisnotarealid")
-            print("heartbeat called")
         }
     }
     
     func testBootstrapTwoServersSingleHeartbeat() throws {
-        Task {
-            guard let listener = TransmissionListener(port: 1234, logger: nil) else
-            {
-                XCTFail()
-                return
-            }
-            
-            let bootstrap = WreathBootstrap()
-            let server = WreathBootstrapServer(listener: listener, handler: bootstrap)
-            server.acceptLoop()
+        guard let listener = TransmissionListener(port: 1234, logger: nil) else
+        {
+            XCTFail()
+            return
         }
         
+        let bootstrap = WreathBootstrap()
+        let server = WreathBootstrapServer(listener: listener, handler: bootstrap)
         Task {
-            guard let listener = TransmissionListener(port: 5678, logger: nil) else
-            {
-                XCTFail()
-                return
-            }
-            
-            let bootstrap = WreathBootstrap()
-            let server = WreathBootstrapServer(listener: listener, handler: bootstrap)
             server.acceptLoop()
-            server.shutdown()
         }
         
         let configURL = File.homeDirectory().appendingPathComponent("Bootstrap-client.json")
         let client = try WreathBootstrapClient(configURL: configURL)
         let serverInfo = WreathServerInfo(serverID: "thisisnotarealid", serverAddress: "127.0.0.1:1234")
         try client.registerNewAddress(newServer: serverInfo)
-        try client.sendHeartbeat(serverID: "thisisnotarealid")
         
-        let configURL2 = File.homeDirectory().appendingPathComponent("Bootstrap-client2.json")
-        let client2 = try WreathBootstrapClient(configURL: configURL)
-        let serverInfo2 = WreathServerInfo(serverID: "thisisnotarealid", serverAddress: "127.0.0.1:5678")
-        try client2.registerNewAddress(newServer: serverInfo)
-    
+        let serverInfo2 = WreathServerInfo(serverID: "thisisnotarealideither", serverAddress: "127.0.0.1:1234")
+        try client.registerNewAddress(newServer: serverInfo2)
+        
+        var wreathServers = try client.getAddresses(serverID: "thisisnotarealid")
+        XCTAssertEqual(wreathServers.count, 2)
+        
+        Thread.sleep(forTimeInterval: WreathBootstrap.heartbeatInterval)
+        try client.sendHeartbeat(serverID: "thisisnotarealid")
+        Thread.sleep(forTimeInterval: WreathBootstrap.heartbeatTimeout - WreathBootstrap.heartbeatInterval)
+        
+        wreathServers = try client.getAddresses(serverID: "thisisnotarealid")
+        XCTAssertEqual(wreathServers.count, 1)
     }
 }

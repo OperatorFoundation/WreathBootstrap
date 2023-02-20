@@ -3,6 +3,9 @@ import Arcadia
 
 public class WreathBootstrap
 {
+    static public let heartbeatInterval = 60.0 // seconds, one minute
+    static public let heartbeatTimeout = 60.0 * 2 // seconds, two minutes
+    
     public let arcadia = Arcadia()
     // an array of valid Bootstrap servers
     public var availableServers: [String: WreathServerInfo] = [:]
@@ -11,6 +14,7 @@ public class WreathBootstrap
     
     /// Sends a request for a list of WreathServers
     public func getAddresses(serverID: String) -> [WreathServerInfo] {
+        removeOldServers()
         return arcadia.findPeers(wreathServers: [WreathServerInfo](availableServers.values), serverID: serverID)
     }
     
@@ -29,6 +33,17 @@ public class WreathBootstrap
             server.lastHeartbeat = Date()
         } else {
             throw WreathBootstrapError.invalidServerID
+        }
+    }
+    
+    func removeOldServers() {
+        self.availableServers = self.availableServers.filter
+        {
+            (key, value) in
+            
+            let now = Date()
+            let timeInterval = now.timeIntervalSince(value.lastHeartbeat)
+            return timeInterval < Self.heartbeatTimeout
         }
     }
 }
