@@ -6,7 +6,7 @@
 //
 import Arcadia
 
-public enum BootstrapRequest: Codable
+public enum WreathBootstrapRequest: Codable
 {
     case getAddresses(Getaddresses)
     case registerNewAddress(Registernewaddress)
@@ -43,7 +43,7 @@ public struct Sendheartbeat: Codable
     }
 }
 
-public enum BootstrapResponse: Codable
+public enum WreathBootstrapResponse: Codable
 {
     case getAddresses([WreathServerInfo])
     case registerNewAddress

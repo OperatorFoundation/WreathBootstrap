@@ -4,14 +4,14 @@
 import PackageDescription
 
 let package = Package(
-    name: "Bootstrap",
+    name: "WreathBootstrap",
     platforms: [
         .macOS(.v13)
     ],
     products: [
         .library(
-            name: "BootstrapClient",
-            targets: ["BootstrapClient"]),
+            name: "WreathBootstrapClient",
+            targets: ["WreathBootstrapClient"]),
     ],
     dependencies: [
         .package(url: "https://github.com/OperatorFoundation/Arcadia", branch: "main"),
@@ -21,26 +21,26 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Bootstrap",
+            name: "WreathBootstrap",
             dependencies: [
                 "Arcadia",
             ]),
         .target(
-            name: "BootstrapClient",
+            name: "WreathBootstrapClient",
             dependencies: [
                 "Antiphony",
-                "Bootstrap",
+                "WreathBootstrap",
             ]),
         .executableTarget(
-            name: "BootstrapServer",
+            name: "WreathBootstrapServer",
             dependencies: [
                 "Antiphony",
-                "Bootstrap",
+                "WreathBootstrap",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]),
         .testTarget(
-            name: "BootstrapTests",
-            dependencies: ["Bootstrap", "BootstrapClient", "BootstrapServer"]),
+            name: "WreathBootstrapTests",
+            dependencies: ["WreathBootstrap", "WreathBootstrapClient", "WreathBootstrapServer"]),
     ],
     swiftLanguageVersions: [.v5]
 )

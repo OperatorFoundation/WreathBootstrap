@@ -1,7 +1,7 @@
 import Foundation
 import Arcadia
 
-public class Bootstrap
+public class WreathBootstrap
 {
     public let arcadia = Arcadia()
     // an array of valid Bootstrap servers
@@ -17,7 +17,7 @@ public class Bootstrap
     /// Adds a new WreathServer to the verified server list
     public func registerNewAddress(newServer: WreathServerInfo) throws {
         if self.availableServers[newServer.serverID] != nil {
-            throw BootstrapError.serverIDAlreadyExists
+            throw WreathBootstrapError.serverIDAlreadyExists
         } else {
             self.availableServers[newServer.serverID] = newServer
         }
@@ -28,12 +28,12 @@ public class Bootstrap
         if let server = self.availableServers[serverID] {
             server.lastHeartbeat = Date()
         } else {
-            throw BootstrapError.invalidServerID
+            throw WreathBootstrapError.invalidServerID
         }
     }
 }
 
-public enum BootstrapError: Error {
+public enum WreathBootstrapError: Error {
     case serverIDAlreadyExists
     case invalidServerID
 }

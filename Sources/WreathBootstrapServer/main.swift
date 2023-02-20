@@ -22,7 +22,7 @@ import Net
 import Spacetime
 
 
-struct BootstrapCommandLine: ParsableCommand
+struct WreathBootstrapCommandLine: ParsableCommand
 {
     static let configuration = CommandConfiguration(
         commandName: "Bootstrap",
@@ -34,7 +34,7 @@ struct BootstrapCommandLine: ParsableCommand
     static let loggerLabel = "org.OperatorFoundation.BootstrapLogger"
 }
 
-extension BootstrapCommandLine
+extension WreathBootstrapCommandLine
 {
     struct New: ParsableCommand
     {
@@ -54,7 +54,7 @@ extension BootstrapCommandLine
     }
 }
 
-extension BootstrapCommandLine
+extension WreathBootstrapCommandLine
 {
     struct Run: ParsableCommand
     {
@@ -68,11 +68,11 @@ extension BootstrapCommandLine
             }
             
             let BootstrapLogic = Bootstrap()
-            let demoServer = BootstrapServer(listener: newListener, handler: BootstrapLogic)
+            let demoServer = WreathBootstrapServer(listener: newListener, handler: BootstrapLogic)
             
             customBootstrap.wait()
         }
     }
 }
 
-BootstrapCommandLine.main()
+WreathBootstrapCommandLine.main()

@@ -10,7 +10,7 @@ import Foundation
 import TransmissionTypes
 import Bootstrap
 
-public class BootstrapServer
+public class WreathBootstrapServer
 {
     let listener: TransmissionTypes.Listener
     let handler: Bootstrap

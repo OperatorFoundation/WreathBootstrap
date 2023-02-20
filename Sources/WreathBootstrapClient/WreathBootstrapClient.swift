@@ -11,7 +11,7 @@ import Arcadia
 import TransmissionTypes
 import Bootstrap
 
-public class BootstrapClient
+public class WreathBootstrapClient
 {
     let connection: TransmissionTypes.Connection
 
@@ -27,12 +27,12 @@ public class BootstrapClient
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
-            throw BootstrapClientError.writeFailed
+            throw WreathBootstrapClientError.writeFailed
         }
 
         guard let responseData = self.connection.readWithLengthPrefix(prefixSizeInBits: 64) else
         {
-            throw BootstrapClientError.readFailed
+            throw WreathBootstrapClientError.readFailed
         }
 
         let decoder = JSONDecoder()
@@ -42,7 +42,7 @@ public class BootstrapClient
             case .getAddresses(let value):
                 return value
             default:
-                throw BootstrapClientError.badReturnType
+                throw WreathBootstrapClientError.badReturnType
         }
     }
 
@@ -53,12 +53,12 @@ public class BootstrapClient
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
-            throw BootstrapClientError.writeFailed
+            throw WreathBootstrapClientError.writeFailed
         }
 
         guard let responseData = self.connection.readWithLengthPrefix(prefixSizeInBits: 64) else
         {
-            throw BootstrapClientError.readFailed
+            throw WreathBootstrapClientError.readFailed
         }
 
         let decoder = JSONDecoder()
@@ -68,7 +68,7 @@ public class BootstrapClient
             case .registerNewAddress:
                 return
             default:
-                throw BootstrapClientError.badReturnType
+                throw WreathBootstrapClientError.badReturnType
         }
     }
 
@@ -79,12 +79,12 @@ public class BootstrapClient
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
-            throw BootstrapClientError.writeFailed
+            throw WreathBootstrapClientError.writeFailed
         }
 
         guard let responseData = self.connection.readWithLengthPrefix(prefixSizeInBits: 64) else
         {
-            throw BootstrapClientError.readFailed
+            throw WreathBootstrapClientError.readFailed
         }
 
         let decoder = JSONDecoder()
@@ -94,12 +94,12 @@ public class BootstrapClient
             case .sendHeartbeat:
                 return
             default:
-                throw BootstrapClientError.badReturnType
+                throw WreathBootstrapClientError.badReturnType
         }
     }
 }
 
-public enum BootstrapClientError: Error
+public enum WreathBootstrapClientError: Error
 {
     case connectionRefused(String, Int)
     case writeFailed
