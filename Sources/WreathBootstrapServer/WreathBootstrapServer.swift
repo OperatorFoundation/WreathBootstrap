@@ -71,7 +71,7 @@ public class WreathBootstrapServer
                 switch request
                 {
                     case .getAddresses(let value):
-                        let result = self.handler.getAddresses(serverID: value.serverID)
+                        let result = self.handler.getAddresses(key: value.key)
                         let response = WreathBootstrapResponse.getAddresses(result)
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
@@ -89,7 +89,7 @@ public class WreathBootstrapServer
                             throw BootstrapServerError.writeFailed
                         }
                     case .sendHeartbeat(let value):
-                        try self.handler.sendHeartbeat(serverID: value.serverID)
+                        try self.handler.sendHeartbeat(key: value.key)
                         let response = WreathBootstrapResponse.sendHeartbeat
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)

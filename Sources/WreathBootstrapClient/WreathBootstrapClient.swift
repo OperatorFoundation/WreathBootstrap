@@ -20,9 +20,9 @@ public class WreathBootstrapClient
         self.connection = connection
     }
 
-    public func getAddresses(serverID: String) throws -> [WreathServerInfo]
+    public func getAddresses(key: Key) throws -> [WreathServerInfo]
     {
-        let message = WreathBootstrapRequest.getAddresses(Getaddresses(serverID: serverID))
+        let message = WreathBootstrapRequest.getAddresses(Getaddresses(key: key))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
@@ -72,9 +72,9 @@ public class WreathBootstrapClient
         }
     }
 
-    public func sendHeartbeat(serverID: String) throws
+    public func sendHeartbeat(key: Key) throws
     {
-        let message = WreathBootstrapRequest.sendHeartbeat(Sendheartbeat(serverID: serverID))
+        let message = WreathBootstrapRequest.sendHeartbeat(Sendheartbeat(key: key))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else

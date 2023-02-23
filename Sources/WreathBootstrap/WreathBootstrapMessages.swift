@@ -15,11 +15,11 @@ public enum WreathBootstrapRequest: Codable
 
 public struct Getaddresses: Codable
 {
-    public let serverID: String
+    public let key: Key
 
-    public init(serverID: String)
+    public init(key: Key)
     {
-        self.serverID = serverID
+        self.key = key
     }
 }
 
@@ -35,11 +35,11 @@ public struct Registernewaddress: Codable
 
 public struct Sendheartbeat: Codable
 {
-    public let serverID: String
+    public let key: Key
 
-    public init(serverID: String)
+    public init(key: Key)
     {
-        self.serverID = serverID
+        self.key = key
     }
 }
 
