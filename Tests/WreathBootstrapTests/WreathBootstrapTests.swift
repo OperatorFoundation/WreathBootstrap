@@ -4,6 +4,7 @@ import XCTest
 @testable import WreathBootstrapServer
 import Arcadia
 import Gardener
+import KeychainTypes
 import Transmission
 
 final class WreathBootstrapTests: XCTestCase {
@@ -22,41 +23,45 @@ final class WreathBootstrapTests: XCTestCase {
         
         let configURL = File.homeDirectory().appendingPathComponent("Bootstrap-client.json")
         let client = try WreathBootstrapClient(configURL: configURL)
-        let key = Key(data: "thisisnotarealid".data)
-        let serverInfo = WreathServerInfo(key: key, serverAddress: "127.0.0.1:1234")
+        let key = try PublicKey(string: "thisisnotarealid")
+        let serverInfo = WreathServerInfo(publicKey: key, serverAddress: "127.0.0.1:1234")
         try client.registerNewAddress(newServer: serverInfo)
-        try client.sendHeartbeat(key: key)
+        try client.sendHeartbeat(key: key.arcadiaKey!)
     }
     
     func testBootstrapClient() throws {
         let configURL = File.homeDirectory().appendingPathComponent("Bootstrap-client.json")
         let client = try WreathBootstrapClient(configURL: configURL)
-        let key = Key(data: "thisisnotarealid".data)
-        let serverInfo = WreathServerInfo(key: key, serverAddress: "127.0.0.1:1234")
+        let key = try PublicKey(string: "thisisnotarealid")
+        let serverInfo = WreathServerInfo(publicKey: key, serverAddress: "127.0.0.1:1234")
         try client.registerNewAddress(newServer: serverInfo)
-        try client.sendHeartbeat(key: key)
+        try client.sendHeartbeat(key: key.arcadiaKey!)
     }
     
     func testBootstrapClientTenMinutes() throws {
         let configURL = File.homeDirectory().appendingPathComponent("Bootstrap-client.json")
         let client = try WreathBootstrapClient(configURL: configURL)
-        let key = Key(data: "thisisnotarealid".data)
-        let serverInfo = WreathServerInfo(key: key, serverAddress: "127.0.0.1:1234")
+        let key = try PublicKey(string: "thisisnotarealid")
+        let serverInfo = WreathServerInfo(publicKey: key, serverAddress: "127.0.0.1:1234")
         try client.registerNewAddress(newServer: serverInfo)
         var index = 0
         let lock = DispatchSemaphore(value: 0)
-        scheduleHeartbeat(index: index, lock: lock, client: client)
+        try scheduleHeartbeat(index: index, lock: lock, client: client)
         lock.wait()
     }
     
-    func scheduleHeartbeat(index: Int, lock: DispatchSemaphore, client: WreathBootstrapClient) {
+    func scheduleHeartbeat(index: Int, lock: DispatchSemaphore, client: WreathBootstrapClient) throws {
         let secondsToDelay = 60.0
         DispatchQueue.main.asyncAfter(deadline: .now() + secondsToDelay) {
-            let key = Key(data: "thisisnotarealid".data)
-            try? client.sendHeartbeat(key: key)
+            guard let key = try? PublicKey(string: "thisisnotarealid") else {
+                XCTFail()
+                return
+            }
+            
+            try? client.sendHeartbeat(key: key.arcadiaKey!)
             print("Heartbeat called")
             if index < 10 {
-                self.scheduleHeartbeat(index: index + 1, lock: lock, client: client)
+                try? self.scheduleHeartbeat(index: index + 1, lock: lock, client: client)
             } else {
                 lock.signal()
             }
@@ -78,22 +83,22 @@ final class WreathBootstrapTests: XCTestCase {
         
         let configURL = File.homeDirectory().appendingPathComponent("Bootstrap-client.json")
         let client = try WreathBootstrapClient(configURL: configURL)
-        let key = Key(data: "thisisnotarealid".data)
-        let serverInfo = WreathServerInfo(key: key, serverAddress: "127.0.0.1:1234")
+        let key = try PublicKey(string: "thisisnotarealid")
+        let serverInfo = WreathServerInfo(publicKey: key, serverAddress: "127.0.0.1:1234")
         try client.registerNewAddress(newServer: serverInfo)
         
-        let key2 = Key(data: "thisisnotarealideither".data)
-        let serverInfo2 = WreathServerInfo(key: key, serverAddress: "127.0.0.1:1234")
+        let key2 = try PublicKey(string: "thisisnotarealideither")
+        let serverInfo2 = WreathServerInfo(publicKey: key2, serverAddress: "127.0.0.1:1234")
         try client.registerNewAddress(newServer: serverInfo2)
         
-        var wreathServers = try client.getAddresses(key: key)
+        var wreathServers = try client.getAddresses(key: key.arcadiaKey!)
         XCTAssertEqual(wreathServers.count, 2)
         
         Thread.sleep(forTimeInterval: WreathBootstrap.heartbeatInterval)
-        try client.sendHeartbeat(key: key)
+        try client.sendHeartbeat(key: key.arcadiaKey!)
         Thread.sleep(forTimeInterval: WreathBootstrap.heartbeatTimeout - WreathBootstrap.heartbeatInterval)
         
-        wreathServers = try client.getAddresses(key: key)
+        wreathServers = try client.getAddresses(key: key.arcadiaKey!)
         XCTAssertEqual(wreathServers.count, 1)
     }
 }

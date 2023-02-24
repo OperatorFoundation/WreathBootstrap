@@ -1,5 +1,6 @@
 import Foundation
 import Arcadia
+import KeychainTypes
 
 public class WreathBootstrap
 {
@@ -20,10 +21,13 @@ public class WreathBootstrap
     
     /// Adds a new WreathServer to the verified server list
     public func registerNewAddress(newServer: WreathServerInfo) throws {
-        if self.availableServers[newServer.key] != nil {
+        guard let key = newServer.publicKey.arcadiaKey else {
+            throw WreathBootstrapError.failedToGetKey
+        }
+        if self.availableServers[key] != nil {
             throw WreathBootstrapError.serverIDAlreadyExists
         } else {
-            self.availableServers[newServer.key] = newServer
+            self.availableServers[key] = newServer
         }
     }
     
@@ -49,6 +53,7 @@ public class WreathBootstrap
 }
 
 public enum WreathBootstrapError: Error {
+    case failedToGetKey
     case serverIDAlreadyExists
     case invalidServerID
 }
