@@ -1,14 +1,14 @@
 //
-//  BootstrapClient.swift
+//  WreathBootstrapClient.swift
 //
 //
-//  Created by Clockwork on Feb 6, 2023.
+//  Created by Clockwork on Mar 1, 2023.
 //
 
 import Foundation
 
-import Arcadia
 import TransmissionTypes
+import Arcadia
 import WreathBootstrap
 
 public class WreathBootstrapClient
@@ -20,9 +20,9 @@ public class WreathBootstrapClient
         self.connection = connection
     }
 
-    public func getAddresses(key: Key) throws -> [WreathServerInfo]
+    public func getAddresses(serverID: ArcadiaID) throws -> [WreathServerInfo]
     {
-        let message = WreathBootstrapRequest.getAddresses(Getaddresses(key: key))
+        let message = WreathBootstrapRequest.GetaddressesRequest(Getaddresses(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
@@ -39,7 +39,7 @@ public class WreathBootstrapClient
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
         switch response
         {
-            case .getAddresses(let value):
+            case .GetaddressesResponse(let value):
                 return value
             default:
                 throw WreathBootstrapClientError.badReturnType
@@ -48,7 +48,7 @@ public class WreathBootstrapClient
 
     public func registerNewAddress(newServer: WreathServerInfo) throws
     {
-        let message = WreathBootstrapRequest.registerNewAddress(Registernewaddress(newServer: newServer))
+        let message = WreathBootstrapRequest.RegisternewaddressRequest(Registernewaddress(newServer: newServer))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
@@ -65,16 +65,16 @@ public class WreathBootstrapClient
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
         switch response
         {
-            case .registerNewAddress:
+            case .RegisternewaddressResponse:
                 return
             default:
                 throw WreathBootstrapClientError.badReturnType
         }
     }
 
-    public func sendHeartbeat(key: Key) throws
+    public func sendHeartbeat(serverID: ArcadiaID) throws
     {
-        let message = WreathBootstrapRequest.sendHeartbeat(Sendheartbeat(key: key))
+        let message = WreathBootstrapRequest.SendheartbeatRequest(Sendheartbeat(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
@@ -91,7 +91,7 @@ public class WreathBootstrapClient
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
         switch response
         {
-            case .sendHeartbeat:
+            case .SendheartbeatResponse:
                 return
             default:
                 throw WreathBootstrapClientError.badReturnType
