@@ -1,25 +1,26 @@
 //
-//  BootstrapMessages.swift
+//  WreathBootstrapMessages.swift
 //
 //
-//  Created by Clockwork on Feb 6, 2023.
+//  Created by Clockwork on Mar 1, 2023.
 //
+
 import Arcadia
 
 public enum WreathBootstrapRequest: Codable
 {
-    case getAddresses(Getaddresses)
-    case registerNewAddress(Registernewaddress)
-    case sendHeartbeat(Sendheartbeat)
+    case GetaddressesRequest(Getaddresses)
+    case RegisternewaddressRequest(Registernewaddress)
+    case SendheartbeatRequest(Sendheartbeat)
 }
 
 public struct Getaddresses: Codable
 {
-    public let key: Key
+    public let serverID: ArcadiaID
 
-    public init(key: Key)
+    public init(serverID: ArcadiaID)
     {
-        self.key = key
+        self.serverID = serverID
     }
 }
 
@@ -35,17 +36,17 @@ public struct Registernewaddress: Codable
 
 public struct Sendheartbeat: Codable
 {
-    public let key: Key
+    public let serverID: ArcadiaID
 
-    public init(key: Key)
+    public init(serverID: ArcadiaID)
     {
-        self.key = key
+        self.serverID = serverID
     }
 }
 
 public enum WreathBootstrapResponse: Codable
 {
-    case getAddresses([WreathServerInfo])
-    case registerNewAddress
-    case sendHeartbeat
+    case GetaddressesResponse([WreathServerInfo])
+    case RegisternewaddressResponse
+    case SendheartbeatResponse
 }

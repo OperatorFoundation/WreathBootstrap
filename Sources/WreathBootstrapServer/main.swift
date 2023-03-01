@@ -25,7 +25,7 @@ import Spacetime
 struct WreathBootstrapCommandLine: ParsableCommand
 {
     static let configuration = CommandConfiguration(
-        commandName: "Bootstrap",
+        commandName: "WreathBootstrap",
         subcommands: [New.self, Run.self]
     )
     
@@ -47,7 +47,7 @@ extension WreathBootstrapCommandLine
         mutating public func run() throws
         {
             let keychainDirectoryURL = File.homeDirectory().appendingPathComponent(".Bootstrap-server")
-            let keychainLabel = "Bootstrap.KeyAgreement"
+            let keychainLabel = "WreathBootstrap.KeyAgreement"
             
             try Antiphony.generateNew(name: name, port: port, serverConfigURL: serverConfigURL, clientConfigURL: clientConfigURL, keychainURL: keychainDirectoryURL, keychainLabel: keychainLabel)
         }

@@ -9,31 +9,32 @@ public class WreathBootstrap
     
     public let arcadia = Arcadia()
     // an array of valid Bootstrap servers
-    public var availableServers: [Key: WreathServerInfo] = [:]
+    public var availableServers: [ArcadiaID: WreathServerInfo] = [:]
     
     public init() {}
     
     /// Sends a request for a list of WreathServers
-    public func getAddresses(key: Key) -> [WreathServerInfo] {
+    public func getAddresses(serverID: ArcadiaID) -> [WreathServerInfo] {
         removeOldServers()
-        return arcadia.findPeers(for: key)
+        return arcadia.findPeers(for: serverID)
     }
     
     /// Adds a new WreathServer to the verified server list
     public func registerNewAddress(newServer: WreathServerInfo) throws {
-        guard let key = newServer.publicKey.arcadiaKey else {
-            throw WreathBootstrapError.failedToGetKey
+        let publicKey = newServer.publicKey
+        guard let serverID = publicKey.arcadiaKey else {
+            throw WreathBootstrapError.failedToGetServerID
         }
-        if self.availableServers[key] != nil {
+        if self.availableServers[serverID] != nil {
             throw WreathBootstrapError.serverIDAlreadyExists
         } else {
-            self.availableServers[key] = newServer
+            self.availableServers[serverID] = newServer
         }
     }
     
     /// A heartbeat function that updates the last date that a check in took place (keep alive)
-    public func sendHeartbeat(key: Key) throws {
-        if let server = self.availableServers[key] {
+    public func sendHeartbeat(serverID: ArcadiaID) throws {
+        if let server = self.availableServers[serverID] {
             server.lastHeartbeat = Date()
         } else {
             throw WreathBootstrapError.invalidServerID
@@ -53,7 +54,7 @@ public class WreathBootstrap
 }
 
 public enum WreathBootstrapError: Error {
-    case failedToGetKey
+    case failedToGetServerID
     case serverIDAlreadyExists
     case invalidServerID
 }

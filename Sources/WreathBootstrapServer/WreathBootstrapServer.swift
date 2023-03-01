@@ -1,8 +1,8 @@
 //
-//  BootstrapServer.swift
+//  WreathBootstrapServer.swift
 //
 //
-//  Created by Clockwork on Feb 6, 2023.
+//  Created by Clockwork on Mar 1, 2023.
 //
 
 import Foundation
@@ -63,39 +63,39 @@ public class WreathBootstrapServer
             {
                 guard let requestData = connection.readWithLengthPrefix(prefixSizeInBits: 64) else
                 {
-                    throw BootstrapServerError.readFailed
+                    throw WreathBootstrapServerError.readFailed
                 }
 
                 let decoder = JSONDecoder()
                 let request = try decoder.decode(WreathBootstrapRequest.self, from: requestData)
                 switch request
                 {
-                    case .getAddresses(let value):
-                        let result = self.handler.getAddresses(key: value.key)
-                        let response = WreathBootstrapResponse.getAddresses(result)
+                    case .GetaddressesRequest(let value):
+                        let result = self.handler.getAddresses(serverID: value.serverID)
+                        let response = WreathBootstrapResponse.GetaddressesResponse(result)
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
-                            throw BootstrapServerError.writeFailed
+                            throw WreathBootstrapServerError.writeFailed
                         }
-                    case .registerNewAddress(let value):
+                    case .RegisternewaddressRequest(let value):
                         try self.handler.registerNewAddress(newServer: value.newServer)
-                        let response = WreathBootstrapResponse.registerNewAddress
+                        let response = WreathBootstrapResponse.RegisternewaddressResponse
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
-                            throw BootstrapServerError.writeFailed
+                            throw WreathBootstrapServerError.writeFailed
                         }
-                    case .sendHeartbeat(let value):
-                        try self.handler.sendHeartbeat(key: value.key)
-                        let response = WreathBootstrapResponse.sendHeartbeat
+                    case .SendheartbeatRequest(let value):
+                        try self.handler.sendHeartbeat(serverID: value.serverID)
+                        let response = WreathBootstrapResponse.SendheartbeatResponse
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
-                            throw BootstrapServerError.writeFailed
+                            throw WreathBootstrapServerError.writeFailed
                         }
                 }
             }
@@ -108,7 +108,7 @@ public class WreathBootstrapServer
     }
 }
 
-public enum BootstrapServerError: Error
+public enum WreathBootstrapServerError: Error
 {
     case connectionRefused(String, Int)
     case writeFailed
