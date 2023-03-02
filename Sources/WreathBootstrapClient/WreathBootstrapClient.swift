@@ -64,7 +64,7 @@ public class WreathBootstrapClient
         let decoder = JSONDecoder()
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
         print("BOOTSTRAPCLIENT RESPONSE: \(response)")
-        print("BOOTSTRAPCLIENT responseData: \(response)")
+        print("BOOTSTRAPCLIENT responseData: \(responseData)")
         switch response
         {
             case .RegisternewaddressResponse:
