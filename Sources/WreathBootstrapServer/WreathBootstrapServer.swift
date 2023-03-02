@@ -73,8 +73,10 @@ public class WreathBootstrapServer
                     case .GetaddressesRequest(let value):
                         let result = self.handler.getAddresses(serverID: value.serverID)
                         let response = WreathBootstrapResponse.GetaddressesResponse(result)
+                        print("BOOTSTRAPSERVER RESPONSE: \(response)")
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
+                        print("BOOTSTRAPSERVER responseDATA: \(responseData)")
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
                             throw WreathBootstrapServerError.writeFailed
