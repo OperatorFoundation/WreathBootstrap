@@ -69,7 +69,7 @@ public class WreathBootstrapServer
                 let decoder = JSONDecoder()
                 let request = try decoder.decode(WreathBootstrapRequest.self, from: requestData)
                 
-                print("BOOTSTRAPSERVER Received a request: \(request)")
+                print("🥾 BOOTSTRAPSERVER Received a request: \(request)")
                 
                 switch request
                 {
@@ -79,7 +79,7 @@ public class WreathBootstrapServer
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         
-                        print("BOOTSTRAPSERVER responseDATA: \(responseData.string)")
+                        print("🥾 BOOTSTRAPSERVER sending a response: \(responseData.string)")
                         
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
@@ -91,7 +91,7 @@ public class WreathBootstrapServer
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         
-                        print("BOOTSTRAPSERVER responseDATA: \(responseData.string)")
+                        print("🥾 BOOTSTRAPSERVER sending a response: \(responseData.string)")
                         
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
@@ -103,7 +103,7 @@ public class WreathBootstrapServer
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
                         
-                        print("BOOTSTRAPSERVER responseDATA: \(responseData.string)")
+                        print("🥾 BOOTSTRAPSERVER sending a response: \(responseData.string)")
                         
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {

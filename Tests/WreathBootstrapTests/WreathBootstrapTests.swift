@@ -38,7 +38,7 @@ final class WreathBootstrapTests: XCTestCase {
         try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaID!)
     }
     
-    func testBootstrapClient() throws
+    func startClient() throws -> (client: WreathBootstrapClient, clientConfig: ClientConfig)
     {
         let configURL = File.homeDirectory().appendingPathComponent("Bootstrap-client.json")
         
@@ -53,9 +53,30 @@ final class WreathBootstrapTests: XCTestCase {
         }
         
         let client = WreathBootstrapClient(connection: connection)
+        
+        return (client, config)
+    }
+    
+    /// Note: This will fail on subsequent runs unless the bootstrap server is restarted.
+    /// This is as designed since it is an error for a bootstrap client to try to register itself multiple times
+    func testBootstrapClientRegisterNewAddress() throws
+    {
+        let (client, config) = try startClient()
         let serverInfo = WreathServerInfo(publicKey: config.serverPublicKey, serverAddress:  "\(config.host):\(config.port)")
         try client.registerNewAddress(newServer: serverInfo)
+    }
+    
+    func testBootstrapClientSendHeartbeat() throws
+    {
+        let (client, config) = try startClient()
         try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaID!)
+    }
+    
+    func testBootstrapClientGetAddresses() throws
+    {
+        let (client, config) = try startClient()
+        let wreathServers = try client.getAddresses(serverID: config.serverPublicKey.arcadiaID!)
+        XCTAssert(!wreathServers.isEmpty)
     }
     
     func testBootstrapClientTenMinutes() throws {

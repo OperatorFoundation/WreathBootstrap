@@ -25,6 +25,9 @@ public class WreathBootstrapClient
         let message = WreathBootstrapRequest.GetaddressesRequest(Getaddresses(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
+        
+        print("🥾 BOOTSTRAPCLIENT JSON data: \(data.string)")
+        
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
             throw WreathBootstrapClientError.writeFailed
@@ -34,6 +37,8 @@ public class WreathBootstrapClient
         {
             throw WreathBootstrapClientError.readFailed
         }
+        
+        print("🥾 BOOTSTRAPCLIENT received responseData: \(responseData.string)")
 
         let decoder = JSONDecoder()
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
@@ -49,10 +54,9 @@ public class WreathBootstrapClient
     public func registerNewAddress(newServer: WreathServerInfo) throws
     {
         let message = WreathBootstrapRequest.RegisternewaddressRequest(Registernewaddress(newServer: newServer))
-        print("BOOTSTRAPCLIENT MESSAGE: \(message)")
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
-        print("BOOTSTRAPCLIENT JSON data: \(data.string)")
+        print("🥾 BOOTSTRAPCLIENT JSON data: \(data.string)")
         
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
@@ -64,7 +68,7 @@ public class WreathBootstrapClient
             throw WreathBootstrapClientError.readFailed
         }
         
-        print("BOOTSTRAPCLIENT responseData: \(responseData.string)")
+        print("🥾 BOOTSTRAPCLIENT received responseData: \(responseData.string)")
         
         let decoder = JSONDecoder()
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
@@ -83,6 +87,9 @@ public class WreathBootstrapClient
         let message = WreathBootstrapRequest.SendheartbeatRequest(Sendheartbeat(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
+        
+        print("🥾 BOOTSTRAPCLIENT JSON data: \(data.string)")
+        
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
             throw WreathBootstrapClientError.writeFailed
@@ -92,6 +99,8 @@ public class WreathBootstrapClient
         {
             throw WreathBootstrapClientError.readFailed
         }
+        
+        print("🥾 BOOTSTRAPCLIENT received responseData: \(responseData.string)")
 
         let decoder = JSONDecoder()
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
