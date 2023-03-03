@@ -68,15 +68,19 @@ public class WreathBootstrapServer
 
                 let decoder = JSONDecoder()
                 let request = try decoder.decode(WreathBootstrapRequest.self, from: requestData)
+                
+                print("BOOTSTRAPSERVER Received a request: \(request)")
+                
                 switch request
                 {
                     case .GetaddressesRequest(let value):
                         let result = self.handler.getAddresses(serverID: value.serverID)
                         let response = WreathBootstrapResponse.GetaddressesResponse(result)
-                        print("BOOTSTRAPSERVER RESPONSE: \(response)")
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
-                        print("BOOTSTRAPSERVER responseDATA: \(responseData)")
+                        
+                        print("BOOTSTRAPSERVER responseDATA: \(responseData.string)")
+                        
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
                             throw WreathBootstrapServerError.writeFailed
@@ -86,6 +90,9 @@ public class WreathBootstrapServer
                         let response = WreathBootstrapResponse.RegisternewaddressResponse
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
+                        
+                        print("BOOTSTRAPSERVER responseDATA: \(responseData.string)")
+                        
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
                             throw WreathBootstrapServerError.writeFailed
@@ -95,6 +102,9 @@ public class WreathBootstrapServer
                         let response = WreathBootstrapResponse.SendheartbeatResponse
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
+                        
+                        print("BOOTSTRAPSERVER responseDATA: \(responseData.string)")
+                        
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
                             throw WreathBootstrapServerError.writeFailed

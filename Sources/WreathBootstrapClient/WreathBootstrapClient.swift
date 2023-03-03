@@ -52,9 +52,7 @@ public class WreathBootstrapClient
         print("BOOTSTRAPCLIENT MESSAGE: \(message)")
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
-        print("BOOTSTRAPCLIENT DATA: \(data)")
-        print("BOOTSTRAPCLIENT newServer publicKey: \(newServer.publicKey)")
-        print("BOOTSTRAPCLIENT newServer serverAddress: \(newServer.serverAddress)")
+        print("BOOTSTRAPCLIENT JSON data: \(data.string)")
         
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
@@ -65,11 +63,12 @@ public class WreathBootstrapClient
         {
             throw WreathBootstrapClientError.readFailed
         }
-
+        
+        print("BOOTSTRAPCLIENT responseData: \(responseData.string)")
+        
         let decoder = JSONDecoder()
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
-        print("BOOTSTRAPCLIENT RESPONSE: \(response)")
-        print("BOOTSTRAPCLIENT responseData: \(responseData)")
+        
         switch response
         {
             case .RegisternewaddressResponse:
