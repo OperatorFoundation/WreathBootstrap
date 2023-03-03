@@ -35,7 +35,7 @@ final class WreathBootstrapTests: XCTestCase {
         let client = WreathBootstrapClient(connection: connection)
         let serverInfo = WreathServerInfo(publicKey: config.serverPublicKey, serverAddress: "\(config.host):\(config.port)")
         try client.registerNewAddress(newServer: serverInfo)
-        try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaKey!)
+        try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaID!)
     }
     
     func testBootstrapClient() throws
@@ -55,7 +55,7 @@ final class WreathBootstrapTests: XCTestCase {
         let client = WreathBootstrapClient(connection: connection)
         let serverInfo = WreathServerInfo(publicKey: config.serverPublicKey, serverAddress:  "\(config.host):\(config.port)")
         try client.registerNewAddress(newServer: serverInfo)
-        try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaKey!)
+        try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaID!)
     }
     
     func testBootstrapClientTenMinutes() throws {
@@ -76,7 +76,7 @@ final class WreathBootstrapTests: XCTestCase {
         try client.registerNewAddress(newServer: serverInfo)
         var index = 0
         let lock = DispatchSemaphore(value: 0)
-        try scheduleHeartbeat(index: index, lock: lock, client: client, arcadiaID: config.serverPublicKey.arcadiaKey!)
+        try scheduleHeartbeat(index: index, lock: lock, client: client, arcadiaID: config.serverPublicKey.arcadiaID!)
         lock.wait()
     }
     
@@ -130,14 +130,14 @@ final class WreathBootstrapTests: XCTestCase {
         let serverInfo2 = WreathServerInfo(publicKey: config2.serverPublicKey, serverAddress: "\(config2.host):\(config2.port)")
         try client.registerNewAddress(newServer: serverInfo2)
         
-        var wreathServers = try client.getAddresses(serverID: config.serverPublicKey.arcadiaKey!)
+        var wreathServers = try client.getAddresses(serverID: config.serverPublicKey.arcadiaID!)
         XCTAssertEqual(wreathServers.count, 2)
         
         Thread.sleep(forTimeInterval: WreathBootstrap.heartbeatInterval)
-        try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaKey!)
+        try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaID!)
         Thread.sleep(forTimeInterval: WreathBootstrap.heartbeatTimeout - WreathBootstrap.heartbeatInterval)
         
-        wreathServers = try client.getAddresses(serverID: config.serverPublicKey.arcadiaKey!)
+        wreathServers = try client.getAddresses(serverID: config.serverPublicKey.arcadiaID!)
         XCTAssertEqual(wreathServers.count, 1)
     }
 }

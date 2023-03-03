@@ -22,7 +22,7 @@ public class WreathBootstrap
     /// Adds a new WreathServer to the verified server list
     public func registerNewAddress(newServer: WreathServerInfo) throws {
         let publicKey = newServer.publicKey
-        guard let serverID = publicKey.arcadiaKey else {
+        guard let serverID = publicKey.arcadiaID else {
             throw WreathBootstrapError.failedToGetServerID
         }
         if self.availableServers[serverID] != nil {
