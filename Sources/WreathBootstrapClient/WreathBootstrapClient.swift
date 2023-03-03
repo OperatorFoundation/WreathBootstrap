@@ -53,6 +53,9 @@ public class WreathBootstrapClient
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         print("BOOTSTRAPCLIENT DATA: \(data)")
+        print("BOOTSTRAPCLIENT newServer publicKey: \(newServer.publicKey)")
+        print("BOOTSTRAPCLIENT newServer serverAddress: \(newServer.serverAddress)")
+        
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
             throw WreathBootstrapClientError.writeFailed
