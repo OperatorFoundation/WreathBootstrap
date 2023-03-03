@@ -33,7 +33,7 @@ final class WreathBootstrapTests: XCTestCase {
         }
         
         let client = WreathBootstrapClient(connection: connection)
-        let serverInfo = WreathServerInfo(publicKey: config.serverPublicKey, serverAddress: "")
+        let serverInfo = WreathServerInfo(publicKey: config.serverPublicKey, serverAddress: "\(config.host):\(config.port)")
         try client.registerNewAddress(newServer: serverInfo)
         try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaKey!)
     }
@@ -46,7 +46,6 @@ final class WreathBootstrapTests: XCTestCase {
         {
             throw AntiphonyError.invalidConfigFile
         }
-        
         
         guard let connection = TransmissionConnection(host: config.host, port: config.port) else
         {
@@ -73,26 +72,21 @@ final class WreathBootstrapTests: XCTestCase {
         }
         
         let client = WreathBootstrapClient(connection: connection)
-        let serverInfo = WreathServerInfo(publicKey: config.serverPublicKey, serverAddress: "")
+        let serverInfo = WreathServerInfo(publicKey: config.serverPublicKey, serverAddress: "\(config.host):\(config.port)")
         try client.registerNewAddress(newServer: serverInfo)
         var index = 0
         let lock = DispatchSemaphore(value: 0)
-        try scheduleHeartbeat(index: index, lock: lock, client: client)
+        try scheduleHeartbeat(index: index, lock: lock, client: client, arcadiaID: config.serverPublicKey.arcadiaKey!)
         lock.wait()
     }
     
-    func scheduleHeartbeat(index: Int, lock: DispatchSemaphore, client: WreathBootstrapClient) throws {
+    func scheduleHeartbeat(index: Int, lock: DispatchSemaphore, client: WreathBootstrapClient, arcadiaID: ArcadiaID) throws {
         let secondsToDelay = 60.0
         DispatchQueue.main.asyncAfter(deadline: .now() + secondsToDelay) {
-            guard let key = try? PublicKey(string: "") else {
-                XCTFail()
-                return
-            }
-            
-            try? client.sendHeartbeat(serverID: key.arcadiaKey!)
+            try? client.sendHeartbeat(serverID: arcadiaID)
             print("Heartbeat called")
             if index < 10 {
-                try? self.scheduleHeartbeat(index: index + 1, lock: lock, client: client)
+                try? self.scheduleHeartbeat(index: index + 1, lock: lock, client: client, arcadiaID: arcadiaID)
             } else {
                 lock.signal()
             }
@@ -113,23 +107,37 @@ final class WreathBootstrapTests: XCTestCase {
         }
         
         let configURL = File.homeDirectory().appendingPathComponent("Bootstrap-client.json")
-        let client = try WreathBootstrapClient(configURL: configURL)
-        let key = try PublicKey(string: "")
-        let serverInfo = WreathServerInfo(publicKey: key, serverAddress: "")
+        guard let config = ClientConfig(url: configURL) else
+        {
+            throw AntiphonyError.invalidConfigFile
+        }
+        
+        guard let connection = TransmissionConnection(host: config.host, port: config.port) else
+        {
+            throw AntiphonyError.failedToCreateConnection
+        }
+        
+        let client = WreathBootstrapClient(connection: connection)
+        let serverInfo = WreathServerInfo(publicKey: config.serverPublicKey, serverAddress: "\(config.host):\(config.port)")
         try client.registerNewAddress(newServer: serverInfo)
         
-        let key2 = try PublicKey(string: "")
-        let serverInfo2 = WreathServerInfo(publicKey: key2, serverAddress: "")
+        let configURL2 = File.homeDirectory().appendingPathComponent("Bootstrap-client2.json")
+        guard let config2 = ClientConfig(url: configURL2) else
+        {
+            throw AntiphonyError.invalidConfigFile
+        }
+        
+        let serverInfo2 = WreathServerInfo(publicKey: config2.serverPublicKey, serverAddress: "\(config2.host):\(config2.port)")
         try client.registerNewAddress(newServer: serverInfo2)
         
-        var wreathServers = try client.getAddresses(serverID: key.arcadiaKey!)
+        var wreathServers = try client.getAddresses(serverID: config.serverPublicKey.arcadiaKey!)
         XCTAssertEqual(wreathServers.count, 2)
         
         Thread.sleep(forTimeInterval: WreathBootstrap.heartbeatInterval)
-        try client.sendHeartbeat(serverID: key.arcadiaKey!)
+        try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaKey!)
         Thread.sleep(forTimeInterval: WreathBootstrap.heartbeatTimeout - WreathBootstrap.heartbeatInterval)
         
-        wreathServers = try client.getAddresses(serverID: key.arcadiaKey!)
+        wreathServers = try client.getAddresses(serverID: config.serverPublicKey.arcadiaKey!)
         XCTAssertEqual(wreathServers.count, 1)
     }
 }
