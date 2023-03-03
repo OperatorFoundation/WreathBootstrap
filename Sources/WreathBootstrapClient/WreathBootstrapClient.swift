@@ -49,6 +49,7 @@ public class WreathBootstrapClient
     public func registerNewAddress(newServer: WreathServerInfo) throws
     {
         let message = WreathBootstrapRequest.RegisternewaddressRequest(Registernewaddress(newServer: newServer))
+        print("BOOTSTRAPCLIENT MESSAGE: \(message)")
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
         print("BOOTSTRAPCLIENT DATA: \(data)")
