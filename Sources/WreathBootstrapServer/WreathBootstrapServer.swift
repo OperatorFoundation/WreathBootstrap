@@ -86,7 +86,16 @@ public class WreathBootstrapServer
                             throw WreathBootstrapServerError.writeFailed
                         }
                     case .RegisternewaddressRequest(let value):
-                        try self.handler.registerNewAddress(newServer: value.newServer)
+                        
+                        do
+                        {
+                            try self.handler.registerNewAddress(newServer: value.newServer)
+                        }
+                        catch
+                        {
+                            print("Register new address error: \(error)")
+                        }
+                        
                         let response = WreathBootstrapResponse.RegisternewaddressResponse
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)

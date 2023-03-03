@@ -57,8 +57,7 @@ final class WreathBootstrapTests: XCTestCase {
         return (client, config)
     }
     
-    /// Note: This will fail on subsequent runs unless the bootstrap server is restarted.
-    /// This is as designed since it is an error for a bootstrap client to try to register itself multiple times
+
     func testBootstrapClientRegisterNewAddress() throws
     {
         let (client, config) = try startClient()
@@ -77,6 +76,7 @@ final class WreathBootstrapTests: XCTestCase {
     {
         let (client, config) = try startClient()
         let wreathServers = try client.getAddresses(serverID: config.serverPublicKey.arcadiaID!)
+        print("Received a GetAddresses response from the server: \(wreathServers)")
     }
     
     func testBootstrapClientTenMinutes() throws {
@@ -95,7 +95,7 @@ final class WreathBootstrapTests: XCTestCase {
         let client = WreathBootstrapClient(connection: connection)
         let serverInfo = WreathServerInfo(publicKey: config.serverPublicKey, serverAddress: "\(config.host):\(config.port)")
         try client.registerNewAddress(newServer: serverInfo)
-        var index = 0
+        let index = 0
         let lock = DispatchSemaphore(value: 0)
         try scheduleHeartbeat(index: index, lock: lock, client: client, arcadiaID: config.serverPublicKey.arcadiaID!)
         lock.wait()

@@ -68,7 +68,7 @@ extension WreathBootstrapCommandLine
             }
             
             let BootstrapLogic = WreathBootstrap()
-            let demoServer = WreathBootstrapServer(listener: newListener, handler: BootstrapLogic)
+            let _ = WreathBootstrapServer(listener: newListener, handler: BootstrapLogic)
             
             customBootstrap.wait()
         }
