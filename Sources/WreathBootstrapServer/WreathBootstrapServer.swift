@@ -66,7 +66,8 @@ public class WreathBootstrapServer
                 {
                     throw WreathBootstrapServerError.readFailed
                 }
-
+                
+                print("-> BootstrapServer received data: \(requestData)")
                 let decoder = JSONDecoder()
                 let request = try decoder.decode(WreathBootstrapRequest.self, from: requestData)
                 print("-> BootstrapServer received a request: \(request)")
