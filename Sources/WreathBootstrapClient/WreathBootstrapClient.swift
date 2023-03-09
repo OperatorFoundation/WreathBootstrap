@@ -35,6 +35,8 @@ public class WreathBootstrapClient
         {
             throw WreathBootstrapClientError.readFailed
         }
+        
+        print("-> BootstrapClient received a response \(responseData.count) bytes: \(responseData.string)")
 
         let decoder = JSONDecoder()
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
@@ -62,6 +64,8 @@ public class WreathBootstrapClient
         {
             throw WreathBootstrapClientError.readFailed
         }
+        
+        print("-> BootstrapClient received a response \(responseData.count) bytes: \(responseData.string)")
 
         let decoder = JSONDecoder()
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
@@ -89,6 +93,8 @@ public class WreathBootstrapClient
         {
             throw WreathBootstrapClientError.readFailed
         }
+        
+        print("-> BootstrapClient received a response \(responseData.count) bytes: \(responseData.string)")
 
         let decoder = JSONDecoder()
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
