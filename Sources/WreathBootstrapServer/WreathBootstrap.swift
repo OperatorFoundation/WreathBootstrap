@@ -20,28 +20,42 @@ public class WreathBootstrap
     }
     
     /// Adds a new WreathServer to the verified server list
-    public func registerNewAddress(newServer: WreathServerInfo) throws {
+    public func registerNewAddress(newServer: WreathServerInfo)
+    {
         let publicKey = newServer.publicKey
-        guard let serverID = publicKey.arcadiaID else {
-            throw WreathBootstrapError.failedToGetServerID
+        
+        guard let serverID = publicKey.arcadiaID else
+        {
+            print("WreathBootstrapError.failedToGetServerID")
+            return
         }
-        if self.availableServers[serverID] != nil {
-            throw WreathBootstrapError.serverIDAlreadyExists
-        } else {
+        
+        if self.availableServers[serverID] != nil
+        {
+            // If the id already exists, ignore this request
+            print("WreathBootstrap warning: this server ID already exists, ignoring register request.")
+        }
+        else
+        {
             self.availableServers[serverID] = newServer
         }
     }
     
     /// A heartbeat function that updates the last date that a check in took place (keep alive)
-    public func sendHeartbeat(serverID: ArcadiaID) throws {
-        if let server = self.availableServers[serverID] {
+    public func sendHeartbeat(serverID: ArcadiaID)
+    {
+        if let server = self.availableServers[serverID]
+        {
             server.lastHeartbeat = Date()
-        } else {
-            throw WreathBootstrapError.invalidServerID
+        }
+        else
+        {
+            print("WreathBootstrapError.invalidServerID")
         }
     }
     
-    func removeOldServers() {
+    func removeOldServers()
+    {
         self.availableServers = self.availableServers.filter
         {
             (key, value) in

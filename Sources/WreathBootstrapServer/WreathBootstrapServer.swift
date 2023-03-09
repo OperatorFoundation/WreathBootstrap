@@ -7,6 +7,7 @@
 
 import Foundation
 
+import Arcadia
 import TransmissionTypes
 import WreathBootstrap
 
@@ -80,7 +81,7 @@ public class WreathBootstrapServer
                             throw WreathBootstrapServerError.writeFailed
                         }
                     case .RegisternewaddressRequest(let value):
-                        try self.handler.registerNewAddress(newServer: value.newServer)
+                        self.handler.registerNewAddress(newServer: value.newServer)
                         let response = WreathBootstrapResponse.RegisternewaddressResponse
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
@@ -89,7 +90,7 @@ public class WreathBootstrapServer
                             throw WreathBootstrapServerError.writeFailed
                         }
                     case .SendheartbeatRequest(let value):
-                        try self.handler.sendHeartbeat(serverID: value.serverID)
+                        self.handler.sendHeartbeat(serverID: value.serverID)
                         let response = WreathBootstrapResponse.SendheartbeatResponse
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
