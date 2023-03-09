@@ -2,13 +2,13 @@
 //  WreathBootstrapClient.swift
 //
 //
-//  Created by Clockwork on Mar 1, 2023.
+//  Created by Clockwork on Mar 8, 2023.
 //
 
 import Foundation
 
-import TransmissionTypes
 import Arcadia
+import TransmissionTypes
 import WreathBootstrap
 
 public class WreathBootstrapClient
@@ -25,9 +25,6 @@ public class WreathBootstrapClient
         let message = WreathBootstrapRequest.GetaddressesRequest(Getaddresses(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
-        
-        print("🥾 BOOTSTRAPCLIENT JSON data: \(data.string)")
-        
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
             throw WreathBootstrapClientError.writeFailed
@@ -37,8 +34,6 @@ public class WreathBootstrapClient
         {
             throw WreathBootstrapClientError.readFailed
         }
-        
-        print("🥾 BOOTSTRAPCLIENT received responseData: \(responseData.string)")
 
         let decoder = JSONDecoder()
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
@@ -56,8 +51,6 @@ public class WreathBootstrapClient
         let message = WreathBootstrapRequest.RegisternewaddressRequest(Registernewaddress(newServer: newServer))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
-        print("🥾 BOOTSTRAPCLIENT JSON data: \(data.string)")
-        
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
             throw WreathBootstrapClientError.writeFailed
@@ -67,12 +60,9 @@ public class WreathBootstrapClient
         {
             throw WreathBootstrapClientError.readFailed
         }
-        
-        print("🥾 BOOTSTRAPCLIENT received responseData: \(responseData.string)")
-        
+
         let decoder = JSONDecoder()
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)
-        
         switch response
         {
             case .RegisternewaddressResponse:
@@ -87,9 +77,6 @@ public class WreathBootstrapClient
         let message = WreathBootstrapRequest.SendheartbeatRequest(Sendheartbeat(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
-        
-        print("🥾 BOOTSTRAPCLIENT JSON data: \(data.string)")
-        
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
             throw WreathBootstrapClientError.writeFailed
@@ -99,8 +86,6 @@ public class WreathBootstrapClient
         {
             throw WreathBootstrapClientError.readFailed
         }
-        
-        print("🥾 BOOTSTRAPCLIENT received responseData: \(responseData.string)")
 
         let decoder = JSONDecoder()
         let response = try decoder.decode(WreathBootstrapResponse.self, from: responseData)

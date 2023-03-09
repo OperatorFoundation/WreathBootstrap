@@ -71,6 +71,14 @@ final class WreathBootstrapTests: XCTestCase {
         try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaID!)
     }
     
+    func testBootsrapClientRegisterNewAddressAndSendHeartbeat () throws
+    {
+        let (client, config) = try startClient()
+        let serverInfo = WreathServerInfo(publicKey: config.serverPublicKey, serverAddress:  "\(config.host):\(config.port)")
+        try client.registerNewAddress(newServer: serverInfo)
+        try client.sendHeartbeat(serverID: config.serverPublicKey.arcadiaID!)
+    }
+    
     /// Note: This will return an empty array if you have not registered more than one server with this instance of the Bootstrap server
     func testBootstrapClientGetAddresses() throws
     {
