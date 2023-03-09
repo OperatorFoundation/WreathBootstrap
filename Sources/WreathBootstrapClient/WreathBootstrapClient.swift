@@ -25,6 +25,7 @@ public class WreathBootstrapClient
         let message = WreathBootstrapRequest.GetaddressesRequest(Getaddresses(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
+        print("-> BootstrapClient is sending a request: \(data.string)")
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
             throw WreathBootstrapClientError.writeFailed
@@ -51,6 +52,7 @@ public class WreathBootstrapClient
         let message = WreathBootstrapRequest.RegisternewaddressRequest(Registernewaddress(newServer: newServer))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
+        print("-> BootstrapClient is sending a request: \(data.string)")
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
             throw WreathBootstrapClientError.writeFailed
@@ -77,6 +79,7 @@ public class WreathBootstrapClient
         let message = WreathBootstrapRequest.SendheartbeatRequest(Sendheartbeat(serverID: serverID))
         let encoder = JSONEncoder()
         let data = try encoder.encode(message)
+        print("-> BootstrapClient is sending a request: \(data.string)")
         guard self.connection.writeWithLengthPrefix(data: data, prefixSizeInBits: 64) else
         {
             throw WreathBootstrapClientError.writeFailed

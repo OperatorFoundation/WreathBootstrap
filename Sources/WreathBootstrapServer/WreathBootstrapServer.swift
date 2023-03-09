@@ -69,6 +69,7 @@ public class WreathBootstrapServer
 
                 let decoder = JSONDecoder()
                 let request = try decoder.decode(WreathBootstrapRequest.self, from: requestData)
+                print("-> BootstrapServer received a request: \(request)")
                 switch request
                 {
                     case .GetaddressesRequest(let value):
@@ -76,6 +77,8 @@ public class WreathBootstrapServer
                         let response = WreathBootstrapResponse.GetaddressesResponse(result)
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
+                        
+                        print("-> BootstrapServer is sending a reponse: \(responseData.string)")
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
                             throw WreathBootstrapServerError.writeFailed
@@ -85,6 +88,7 @@ public class WreathBootstrapServer
                         let response = WreathBootstrapResponse.RegisternewaddressResponse
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
+                        print("-> BootstrapServer is sending a reponse: \(responseData.string)")
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
                             throw WreathBootstrapServerError.writeFailed
@@ -94,6 +98,7 @@ public class WreathBootstrapServer
                         let response = WreathBootstrapResponse.SendheartbeatResponse
                         let encoder = JSONEncoder()
                         let responseData = try encoder.encode(response)
+                        print("-> BootstrapServer is sending a reponse: \(responseData.string)")
                         guard connection.writeWithLengthPrefix(data: responseData, prefixSizeInBits: 64) else
                         {
                             throw WreathBootstrapServerError.writeFailed
