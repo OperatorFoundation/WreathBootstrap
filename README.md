@@ -14,7 +14,7 @@ $ swift run
 
 ```
 example print out
-USAGE: Bootstrap <subcommand>
+USAGE: WreathBootstrap <subcommand>
 
 OPTIONS:
   -h, --help              Show help information.
@@ -23,13 +23,13 @@ SUBCOMMANDS:
   new
   run
 
-  See 'Bootstrap help <subcommand>' for detailed help.
+  See 'WreathBootstrap help <subcommand>' for detailed help.
 ```
 ===
 
 • To create new client / server configs:
 
-$ swift run Bootstrap new <exampleConfigName> <port>
+$ swift run WreathBootstrapServer new <exampleConfigName> <port>
 
 ```
 Wrote config to ~/Bootstrap-server.json
@@ -39,7 +39,7 @@ Wrote config to ~/Bootstrap-client.json
 
 • To run the server:
 
-$ swift run Bootstrap run
+$ swift run WreathBootstrapServer run
 
 ```
 ...
